@@ -19,40 +19,40 @@ const toneStyles: Record<
   }
 > = {
   blue: {
-    icon: "bg-sky-100 text-sky-700",
-    accentText: "text-sky-700",
-    ring: "ring-sky-100",
-    surface: "from-sky-50/70 via-white to-white",
+    icon: "bg-sky-100 text-sky-700 dark:bg-sky-950/70 dark:text-sky-300",
+    accentText: "text-sky-700 dark:text-sky-300",
+    ring: "ring-sky-100 dark:ring-sky-900/50",
+    surface: "from-sky-50/70 via-card to-card dark:from-sky-950/30 dark:via-card dark:to-card",
   },
   green: {
-    icon: "bg-emerald-100 text-emerald-700",
-    accentText: "text-emerald-700",
-    ring: "ring-emerald-100",
-    surface: "from-emerald-50/70 via-white to-white",
+    icon: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/70 dark:text-emerald-300",
+    accentText: "text-emerald-700 dark:text-emerald-300",
+    ring: "ring-emerald-100 dark:ring-emerald-900/50",
+    surface: "from-emerald-50/70 via-card to-card dark:from-emerald-950/30 dark:via-card dark:to-card",
   },
   amber: {
-    icon: "bg-amber-100 text-amber-700",
-    accentText: "text-amber-700",
-    ring: "ring-amber-100",
-    surface: "from-amber-50/70 via-white to-white",
+    icon: "bg-amber-100 text-amber-700 dark:bg-amber-950/70 dark:text-amber-300",
+    accentText: "text-amber-700 dark:text-amber-300",
+    ring: "ring-amber-100 dark:ring-amber-900/50",
+    surface: "from-amber-50/70 via-card to-card dark:from-amber-950/30 dark:via-card dark:to-card",
   },
   rose: {
-    icon: "bg-rose-100 text-rose-700",
-    accentText: "text-rose-700",
-    ring: "ring-rose-100",
-    surface: "from-rose-50/70 via-white to-white",
+    icon: "bg-rose-100 text-rose-700 dark:bg-rose-950/70 dark:text-rose-300",
+    accentText: "text-rose-700 dark:text-rose-300",
+    ring: "ring-rose-100 dark:ring-rose-900/50",
+    surface: "from-rose-50/70 via-card to-card dark:from-rose-950/30 dark:via-card dark:to-card",
   },
   violet: {
-    icon: "bg-violet-100 text-violet-700",
-    accentText: "text-violet-700",
-    ring: "ring-violet-100",
-    surface: "from-violet-50/70 via-white to-white",
+    icon: "bg-violet-100 text-violet-700 dark:bg-violet-950/70 dark:text-violet-300",
+    accentText: "text-violet-700 dark:text-violet-300",
+    ring: "ring-violet-100 dark:ring-violet-900/50",
+    surface: "from-violet-50/70 via-card to-card dark:from-violet-950/30 dark:via-card dark:to-card",
   },
   slate: {
-    icon: "bg-slate-100 text-slate-700",
-    accentText: "text-slate-700",
-    ring: "ring-slate-100",
-    surface: "from-slate-50/70 via-white to-white",
+    icon: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300",
+    accentText: "text-slate-700 dark:text-slate-300",
+    ring: "ring-slate-100 dark:ring-slate-800",
+    surface: "from-slate-50/70 via-card to-card dark:from-slate-900/40 dark:via-card dark:to-card",
   },
 };
 
@@ -265,12 +265,12 @@ export function NoticeBanner({
   className?: string;
 }) {
   const toneClassName: Record<Tone, string> = {
-    blue: "border-sky-200 bg-sky-50 text-sky-800",
-    green: "border-emerald-200 bg-emerald-50 text-emerald-800",
-    amber: "border-amber-200 bg-amber-50 text-amber-800",
-    rose: "border-rose-200 bg-rose-50 text-rose-800",
-    violet: "border-violet-200 bg-violet-50 text-violet-800",
-    slate: "border-slate-200 bg-slate-50 text-slate-700",
+    blue: "border-sky-200 bg-sky-50 text-sky-800 dark:border-sky-900/60 dark:bg-sky-950/50 dark:text-sky-200",
+    green: "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900/60 dark:bg-emerald-950/50 dark:text-emerald-200",
+    amber: "border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/50 dark:text-amber-200",
+    rose: "border-rose-200 bg-rose-50 text-rose-800 dark:border-rose-900/60 dark:bg-rose-950/50 dark:text-rose-200",
+    violet: "border-violet-200 bg-violet-50 text-violet-800 dark:border-violet-900/60 dark:bg-violet-950/50 dark:text-violet-200",
+    slate: "border-slate-200 bg-slate-50 text-slate-700 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-200",
   };
 
   return (

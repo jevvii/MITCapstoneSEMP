@@ -18,17 +18,17 @@ const badgeVariants = cva(
         destructive:
           "border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
-          "border-border/80 bg-white text-foreground [a&]:hover:bg-secondary [a&]:hover:text-primary",
+          "border-border/80 bg-card text-foreground [a&]:hover:bg-secondary [a&]:hover:text-primary",
         success:
-          "border-emerald-200 bg-emerald-50 text-emerald-700 [a&]:hover:bg-emerald-100",
+          "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/60 dark:text-emerald-300 [a&]:hover:bg-emerald-100",
         warning:
-          "border-amber-200 bg-amber-50 text-amber-700 [a&]:hover:bg-amber-100",
+          "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/60 dark:text-amber-300 [a&]:hover:bg-amber-100",
         danger:
-          "border-rose-200 bg-rose-50 text-rose-700 [a&]:hover:bg-rose-100",
+          "border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/60 dark:text-rose-300 [a&]:hover:bg-rose-100",
         info:
-          "border-sky-200 bg-sky-50 text-sky-700 [a&]:hover:bg-sky-100",
+          "border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-900/60 dark:bg-sky-950/60 dark:text-sky-300 [a&]:hover:bg-sky-100",
         neutral:
-          "border-slate-200 bg-slate-50 text-slate-700 [a&]:hover:bg-slate-100",
+          "border-slate-200 bg-slate-50 text-slate-700 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-300 [a&]:hover:bg-slate-100",
       },
     },
     defaultVariants: {

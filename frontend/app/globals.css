@@ -415,6 +415,67 @@
   .dark :is(.text-gray-700, .text-gray-800, .text-gray-900, .text-slate-700, .text-slate-800, .text-slate-900) {
     color: var(--foreground) !important;
   }
+
+  /* Dark mode component overrides for cards, shells, heros, and panels */
+  .dark .workspace-shell {
+    border-color: color-mix(in srgb, var(--border) 85%, transparent 15%) !important;
+    background: linear-gradient(180deg, rgba(22, 32, 51, 0.96), rgba(15, 23, 42, 0.94)), var(--card) !important;
+    box-shadow: 0 30px 70px -40px rgba(0, 0, 0, 0.7) !important;
+  }
+
+  .dark .workspace-topbar {
+    background: linear-gradient(180deg, rgba(22, 32, 51, 0.96), rgba(15, 23, 42, 0.92)) !important;
+    border-color: var(--border) !important;
+  }
+
+  .dark .dashboard-hero {
+    border-color: color-mix(in srgb, var(--border) 80%, white 20%) !important;
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.35), rgba(15, 23, 42, 0.8), var(--card)) !important;
+    box-shadow: 0 24px 54px -34px rgba(0, 0, 0, 0.6) !important;
+  }
+
+  .dark .dashboard-kicker {
+    background: rgba(30, 41, 59, 0.85) !important;
+    border-color: color-mix(in srgb, var(--border) 80%, white 20%) !important;
+    color: #93c5fd !important;
+  }
+
+  .dark .metric-card {
+    border-color: color-mix(in srgb, var(--border) 85%, transparent 15%) !important;
+    background: linear-gradient(180deg, rgba(22, 32, 51, 0.98), rgba(15, 23, 42, 0.96)) !important;
+    box-shadow: 0 24px 54px -34px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .dark .data-card {
+    border-color: color-mix(in srgb, var(--border) 85%, transparent 15%) !important;
+    background: linear-gradient(180deg, rgba(22, 32, 51, 0.98), rgba(15, 23, 42, 0.94)) !important;
+    box-shadow: 0 24px 54px -34px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .dark .soft-panel {
+    border-color: color-mix(in srgb, var(--border) 80%, transparent 20%) !important;
+    background: rgba(30, 41, 59, 0.7) !important;
+  }
+
+  .dark .form-field-shell {
+    border-color: color-mix(in srgb, var(--border) 85%, transparent 15%) !important;
+    background: linear-gradient(180deg, rgba(22, 32, 51, 0.98), rgba(15, 23, 42, 0.96)) !important;
+  }
+
+  .dark .empty-state-panel {
+    border-color: color-mix(in srgb, var(--border) 85%, transparent 15%) !important;
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(22, 32, 51, 0.95)) !important;
+  }
+
+  .dark .table-card {
+    border-color: color-mix(in srgb, var(--border) 85%, transparent 15%) !important;
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(22, 32, 51, 0.95)) !important;
+  }
+
+  .dark body {
+    background: linear-gradient(180deg, #0b1120 0%, var(--background) 38%, #0f172a 100%) !important;
+    color: var(--foreground) !important;
+  }
 }
 
 @layer utilities {

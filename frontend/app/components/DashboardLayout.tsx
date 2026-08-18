@@ -369,11 +369,7 @@ export function DashboardLayout({
         Skip to main content
       </a>
       <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage:
-            'linear-gradient(180deg, #fbfdff 0%, var(--background) 36%, #eef3f9 100%)',
-        }}
+        className="absolute inset-0 pointer-events-none bg-gradient-to-b from-[#fbfdff] via-background to-[#eef3f9] dark:from-[#0b1120] dark:via-background dark:to-[#0f172a]"
       />
       <Toaster position="top-right" richColors />
       {sidebarOpen && (

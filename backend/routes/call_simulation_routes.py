@@ -2643,11 +2643,11 @@ def _validate_call_simulation_launch_assets(
     scenario: Scenario,
     scenario_steps: list[CallSimulationScenarioStepResponse],
 ) -> None:
-    _require_supabase_storage_public_url(
+    _validate_optional_call_simulation_storage_url(
         scenario.ringer_audio_url,
         label="Trainer-uploaded ringer audio",
     )
-    _require_supabase_storage_public_url(
+    _validate_optional_call_simulation_storage_url(
         scenario.hold_audio_url,
         label="Trainer-uploaded notification audio",
     )
@@ -5478,7 +5478,7 @@ async def create_call_simulation_scenario(
         incoming_ringer_audio_url=scenario_data.ringer_audio_url,
         incoming_hold_audio_url=scenario_data.hold_audio_url,
     )
-    _require_supabase_storage_public_url(
+    _validate_optional_call_simulation_storage_url(
         resolved_ringer_audio_url,
         label="Trainer-uploaded ringer audio",
     )
@@ -5948,7 +5948,7 @@ async def update_call_simulation_scenario(
         incoming_ringer_audio_url=scenario_update.ringer_audio_url if "ringer_audio_url" in update_fields else _UNSET,
         incoming_hold_audio_url=scenario_update.hold_audio_url if "hold_audio_url" in update_fields else _UNSET,
     )
-    _require_supabase_storage_public_url(
+    _validate_optional_call_simulation_storage_url(
         scenario.ringer_audio_url,
         label="Trainer-uploaded ringer audio",
     )
