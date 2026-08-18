@@ -1,2 +1,31 @@
 # Keep the root install path aligned with the backend deployment dependencies.
 -r backend/requirements.txt
+fastapi==0.133.0
+uvicorn==0.41.0
+websockets==15.0.1
+python-dotenv==1.2.1
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.9
+pydantic[email]==2.12.5
+email-validator==2.3.0
+pydantic-settings==2.13.1
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+bcrypt==5.0.0
+PyJWT==2.11.0
+azure-cognitiveservices-speech==1.48.2
+azure-identity==1.15.0
+aiofiles==23.2.1
+python-multipart==0.0.6
+requests==2.31.0
+chardet==5.2.0
+openai==2.24.0
+supabase==2.28.3
+openpyxl==3.1.5
+pandas==3.0.2
+reportlab==4.2.5
+google-genai==1.73.1
+google-cloud-speech==2.38.0
+gTTS==2.5.4
+gunicorn==23.0.0
+pyttsx3==2.99

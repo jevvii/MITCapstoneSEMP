@@ -33,7 +33,7 @@ def _load_gtts():
     try:
         from gtts import gTTS
         return gTTS
-    except ImportError:
+    except Exception:
         return None
 
 

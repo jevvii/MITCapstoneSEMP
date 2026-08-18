@@ -139,7 +139,7 @@ class TTSService:
         try:
             from gtts import gTTS  # noqa: F401
             return True
-        except ImportError:
+        except Exception:
             return False
 
     def is_available(self) -> bool:
@@ -223,6 +223,8 @@ class TTSService:
         return self.enable_local_tts and os.name == "nt"
 
     def _local_tts_available(self) -> bool:
+        if self._gtts_available():
+            return True
         if not self.enable_local_tts:
             return False
         if self._windows_sapi_available():
