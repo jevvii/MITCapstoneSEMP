@@ -502,8 +502,11 @@ Return only valid JSON using the structure from the instructions."""
         incorrect_items = [item for item in breakdown if item.get("question_result") == "incorrect"]
         review_items = [item for item in breakdown if item.get("question_result") == "needs_review"]
 
+        def _item_label(it: dict[str, Any]) -> str:
+            return str(it.get("title") or f"Question {it.get('question_number', '')}").strip()
+
         strengths = [
-            f"Answered {item.get('title') or f'Question {item.get('question_number')}' } correctly."
+            f"Answered {_item_label(item)} correctly."
             for item in correct_items[:3]
         ]
         if not strengths and passed:
@@ -512,11 +515,11 @@ Return only valid JSON using the structure from the instructions."""
             strengths.append("Completed the module and submitted all required answers.")
 
         weak_areas = [
-            f"Needs improvement on {item.get('title') or f'Question {item.get('question_number')}' }."
+            f"Needs improvement on {_item_label(item)}."
             for item in incorrect_items[:3]
         ]
         weak_areas.extend(
-            f"Open-ended response quality should be reviewed for {item.get('title') or f'Question {item.get('question_number')}' }."
+            f"Open-ended response quality should be reviewed for {_item_label(item)}."
             for item in review_items[:2]
         )
 
@@ -525,11 +528,11 @@ Return only valid JSON using the structure from the instructions."""
             missing_keywords = [str(keyword or "").strip() for keyword in (item.get("missing_keywords") or []) if str(keyword or "").strip()]
             if missing_keywords:
                 improvement_opportunities.append(
-                    f"Include key ideas such as {', '.join(missing_keywords[:3])} in {item.get('title') or f'Question {item.get('question_number')}' }."
+                    f"Include key ideas such as {', '.join(missing_keywords[:3])} in {_item_label(item)}."
                 )
             elif item.get("question_result") == "incorrect":
                 improvement_opportunities.append(
-                    f"Review the expected answer pattern for {item.get('title') or f'Question {item.get('question_number')}' }."
+                    f"Review the expected answer pattern for {_item_label(item)}."
                 )
 
         if not improvement_opportunities:

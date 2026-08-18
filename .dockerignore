@@ -17,4 +17,4 @@ backend-start.err
 backend-start.log
 frontend-start.err
 frontend-start.log
-media
+.runlogs

@@ -22,6 +22,19 @@ from ..config_validation import (
 
 logger = logging.getLogger(__name__)
 DEFAULT_GEMINI_TTS_MODEL = "gemini-2.5-flash-preview-tts"
+FALLBACK_GEMINI_TTS_MODELS = (
+    "gemini-2.0-flash",
+    "gemini-2.5-flash",
+    "gemini-2.5-pro-preview-tts",
+)
+
+
+def _load_gtts():
+    try:
+        from gtts import gTTS
+        return gTTS
+    except ImportError:
+        return None
 
 
 def _estimate_spoken_duration_seconds(text: str, words_per_minute: int = 150) -> float:
@@ -195,12 +208,16 @@ class TextToSpeechService:
             )
             self.enable_local_tts = True
 
+    def _gtts_available(self) -> bool:
+        return _load_gtts() is not None
+
     def is_available(self) -> bool:
         """Check if any TTS provider is available"""
         return bool(
             self.gemini_client
             or self._azure_tts_available()
             or self._openai_tts_available()
+            or self._gtts_available()
             or self.pyttsx3_engine
             or self._windows_sapi_available()
         )
@@ -214,6 +231,8 @@ class TextToSpeechService:
             providers.append("azure_speech")
         if self._openai_tts_available():
             providers.append("openai")
+        if self._gtts_available():
+            providers.append("gtts")
         if self.pyttsx3_engine:
             providers.append("pyttsx3")
         if self._windows_sapi_available():
@@ -238,9 +257,51 @@ class TextToSpeechService:
             return "openai"
         if self.gemini_client:
             return "gemini"
+        if self._gtts_available():
+            return "gtts"
         if self._windows_sapi_available():
             return "windows_sapi"
         return "pyttsx3"
+
+    def _synthesize_gtts(
+        self,
+        text: str,
+        language_code: str = "en-US",
+    ) -> Optional[TTSResult]:
+        """Synthesize speech using gTTS (Google Translate TTS web API)"""
+        gTTS = _load_gtts()
+        if not gTTS or not text or not text.strip():
+            return None
+
+        try:
+            lang = language_code.split("-")[0].lower() if language_code else "en"
+            tts = gTTS(text=text.strip(), lang=lang, slow=False)
+            buffer = io.BytesIO()
+            tts.write_to_fp(buffer)
+            audio_bytes = buffer.getvalue()
+
+            if not audio_bytes or len(audio_bytes) < 64:
+                raise RuntimeError("gTTS generated empty or invalid audio data.")
+
+            duration = _estimate_spoken_duration_seconds(text)
+            logger.info(f"Successfully generated gTTS audio: {len(audio_bytes)} bytes, {duration:.2f}s")
+            return TTSResult(
+                audio_bytes=audio_bytes,
+                format="mp3",
+                duration_seconds=duration,
+                provider="gtts",
+                error=None,
+            )
+        except Exception as e:
+            error_msg = f"gTTS synthesis failed: {e}"
+            logger.warning(error_msg)
+            return TTSResult(
+                audio_bytes=b"",
+                format="mp3",
+                duration_seconds=0,
+                provider="gtts",
+                error=error_msg,
+            )
 
     def _synthesize_gemini(
         self,
@@ -683,14 +744,9 @@ try {{
             provider = self._select_provider()
 
         provider_sequence = [provider]
-        if provider == "gemini":
-            provider_sequence += ["azure", "openai", "pyttsx3"]
-        elif provider == "azure":
-            provider_sequence += ["openai", "gemini", "pyttsx3"]
-        elif provider == "openai":
-            provider_sequence += ["azure", "gemini", "pyttsx3"]
-        elif provider == "pyttsx3":
-            provider_sequence += ["gemini", "azure", "openai"]
+        for candidate in ["azure", "openai", "gemini", "gtts", "pyttsx3"]:
+            if candidate not in provider_sequence:
+                provider_sequence.append(candidate)
 
         for provider_choice in provider_sequence:
             if provider_choice in attempted_providers:
@@ -702,6 +758,8 @@ try {{
                 result = self._synthesize_azure(text, language_code, voice_name)
             elif provider_choice == "openai" and self._openai_tts_available():
                 result = self._synthesize_openai(text, language_code, voice_name)
+            elif provider_choice == "gtts" and self._gtts_available():
+                result = self._synthesize_gtts(text, language_code)
             elif provider_choice == "pyttsx3" and self.pyttsx3_engine:
                 result = self._synthesize_pyttsx3(text, language_code, voice_name)
             else:

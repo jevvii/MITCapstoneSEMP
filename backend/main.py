@@ -423,8 +423,9 @@ async def health():
         database_error = _summarize_startup_exception(exc)
 
     is_healthy = validation_error is None and database_reachable
+    status_code = 200 if (is_healthy or not strict_mode) else 503
     return JSONResponse(
-        status_code=200 if is_healthy else 503,
+        status_code=status_code,
         content={
             "status": "ok" if is_healthy else "degraded",
             "strict_mode": strict_mode,
@@ -2024,7 +2025,7 @@ def build_allowed_cors_origins() -> list[str]:
 app.add_middleware(
     CORSMiddleware,
     allow_origins=build_allowed_cors_origins(),
-    allow_origin_regex=r"^https://([a-z0-9-]+\.)*onrender\.com$",
+    allow_origin_regex=r"^https://([a-z0-9-]+\.)*(onrender\.com|vercel\.app)$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

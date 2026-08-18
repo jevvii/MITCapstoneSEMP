@@ -31,11 +31,9 @@ def _looks_like_vosk_model_dir(model_path: str) -> bool:
 # Try to import providers
 try:
     from google.cloud import speech_v1 as speech
-    from google.cloud.speech_v1 import enums
     GOOGLE_SPEECH_AVAILABLE = True
 except ImportError:
     speech = None
-    enums = None
     GOOGLE_SPEECH_AVAILABLE = False
 
 # Lazy-load OpenAI SDK when needed
@@ -249,7 +247,7 @@ class SpeechToTextService:
                 use_enhanced=True,  # Use video/phone model for better quality
             )
 
-            audio = speech.RecognitionAudio(content=audio_b64)
+            audio = speech.RecognitionAudio(content=audio_bytes)
 
             # Perform transcription
             operation = self.google_client.long_running_recognize(config=config, audio=audio)

@@ -44,6 +44,8 @@ from ..config_validation import normalize_env_value, resolve_gemini_api_key
 logger = logging.getLogger(__name__)
 DEFAULT_GEMINI_TTS_MODEL = "gemini-2.5-flash-preview-tts"
 FALLBACK_GEMINI_TTS_MODELS = (
+    "gemini-2.0-flash",
+    "gemini-2.5-flash",
     "gemini-2.5-pro-preview-tts",
 )
 

@@ -132,7 +132,8 @@ def _to_csv_cell(value: Any) -> str:
     normalized = "" if value is None else str(value)
     if not any(character in normalized for character in [",", "\"", "\n", "\r"]):
         return normalized
-    return f"\"{normalized.replace('\"', '\"\"')}\""
+    escaped = normalized.replace('"', '""')
+    return f'"{escaped}"'
 
 
 def build_assessment_csv_template() -> str:

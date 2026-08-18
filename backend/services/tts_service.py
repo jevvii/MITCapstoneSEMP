@@ -6,6 +6,7 @@ Provides text-to-speech functionality for AI member responses.
 from __future__ import annotations
 
 import base64
+import io
 import logging
 import os
 import subprocess
@@ -134,13 +135,58 @@ class TTSService:
                     "Local server-side TTS fallback is disabled. Browser fallback will be used when Gemini, Azure, and OpenAI audio are unavailable."
                 )
 
+    def _gtts_available(self) -> bool:
+        try:
+            from gtts import gTTS  # noqa: F401
+            return True
+        except ImportError:
+            return False
+
     def is_available(self) -> bool:
         return (
             self.gemini_tts.is_available()
             or self._azure_tts_available()
             or self._openai_tts_available()
+            or self._gtts_available()
             or self._local_tts_available()
         )
+
+    def _synthesize_gtts(
+        self,
+        text: str,
+        language_code: str = "en-US",
+    ) -> Optional[dict[str, Any]]:
+        """Synthesize speech using gTTS (Google Translate TTS web API)"""
+        try:
+            from gtts import gTTS
+
+            lang = language_code.split("-")[0].lower() if language_code else "en"
+            tts = gTTS(text=text.strip(), lang=lang, slow=False)
+            buffer = io.BytesIO()
+            tts.write_to_fp(buffer)
+            audio_bytes = buffer.getvalue()
+
+            if not audio_bytes or len(audio_bytes) < 64:
+                raise RuntimeError("gTTS generated empty or invalid audio data.")
+
+            audio_base64 = base64.b64encode(audio_bytes).decode("utf-8")
+            words = len((text or "").split())
+            duration = max(1.0, (words / 150.0) * 60.0) if words > 0 else 0.0
+
+            logger.info("Successfully generated gTTS call simulation audio: %d bytes, %.2fs", len(audio_bytes), duration)
+            return {
+                "audio_url": None,
+                "audio_base64": audio_base64,
+                "audio_bytes": audio_bytes,
+                "audio_content_type": "audio/mpeg",
+                "audio_extension": "mp3",
+                "duration": duration,
+                "provider": "gtts",
+                "error": None,
+            }
+        except Exception as e:
+            logger.warning("gTTS speech synthesis failed: %s", e)
+            return None
 
     def _azure_tts_available(self) -> bool:
         # Determine availability by attempting to load the Azure Speech module at runtime
@@ -293,8 +339,19 @@ class TTSService:
             if not openai_error:
                 openai_error = "OpenAI TTS returned no audio."
 
+        # Try gTTS next (works in all environments including Linux/Render without API keys)
+        gtts_error: Optional[str] = None
+        if self._gtts_available():
+            try:
+                gtts_result = self._synthesize_gtts(text)
+                if gtts_result and gtts_result.get("audio_bytes"):
+                    return gtts_result
+            except Exception as e:
+                logger.warning("gTTS synthesis failed: %s", e)
+                gtts_error = str(e)
+
         if not self.enable_local_tts:
-            provider_errors = [error for error in [gemini_error, azure_error, openai_error] if error]
+            provider_errors = [error for error in [gemini_error, azure_error, openai_error, gtts_error] if error]
             fallback_instructions = (
                 "Server-side TTS is unavailable. Configure GOOGLE_API_KEY or GEMINI_API_KEY, OPENAI_API_KEY, "
                 "or AZURE_SPEECH_KEY/AZURE_SPEECH_REGION for deployed speech generation."
@@ -546,7 +603,23 @@ try {{
                 logger.warning("Unable to remove temporary Windows SAPI audio file: %s", temp_path)
 
     async def _fallback_tts(self, text: str) -> dict[str, Any]:
-        """Fallback TTS using native Windows SAPI, then pyttsx3."""
+        """Fallback TTS using native Windows SAPI, gTTS, then pyttsx3."""
+        if self._windows_sapi_available():
+            try:
+                windows_result = self._synthesize_windows_sapi(text)
+                if windows_result and windows_result.get("audio_bytes"):
+                    return windows_result
+            except Exception as exc:
+                logger.warning("Windows SAPI fallback TTS failed: %s", exc)
+
+        if self._gtts_available():
+            try:
+                gtts_result = self._synthesize_gtts(text)
+                if gtts_result and gtts_result.get("audio_bytes"):
+                    return gtts_result
+            except Exception as exc:
+                logger.warning("gTTS fallback TTS failed: %s", exc)
+
         if not self.enable_local_tts:
             return {
                 "audio_url": None,
